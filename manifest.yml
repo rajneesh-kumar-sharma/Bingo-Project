@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: bingo-container
-        image: aseemakram19/bingo
+        image: coolrajnish/bingo:latest
         ports:
         - containerPort: 3000
 ---
