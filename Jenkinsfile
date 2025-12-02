@@ -4,12 +4,71 @@ pipeline{
         jdk 'jdk-17'
         nodejs 'Node18'
     }
+    environment {
+        SCANNER_HOME=tool 'sonar-scanner'
+    }
     stages {
-        stage('checkout code'){
-        steps {
-            git branch: 'master', url: 'https://github.com/rajneesh-kumar-sharma/Bingo-Project.git'
-    }
-    }
-    
+        stage('clean workspace'){
+            steps{
+                cleanWs()
+            }
+        }
+        stage('Checkout from Git'){
+            steps{
+                git branch: 'master', url: 'https://github.com/rajneesh-kumar-sharma/Bingo-Project.git'
+            }
+        }
+        stage("Sonarqube Analysis "){
+            steps{
+                withSonarQubeEnv('sonar-server') {
+                    sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=Bingo \
+                    -Dsonar.projectKey=Bingo '''
+                }
+            }
+        }
+        stage("quality gate"){
+           steps {
+                script {
+                    waitForQualityGate abortPipeline: false, credentialsId: 'Sonar-token' 
+                }
+            } 
+        }
+        stage('Install Dependencies') {
+            steps {
+                sh "npm install"
+            }
+        }
+        //stage('OWASP FS SCAN') {
+          //  steps {
+          //      dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP'
+          //      dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+          //  }
+        //}
+           /* stage('TRIVY FS SCAN') {
+            steps {
+                sh "trivy fs . > trivyfs.txt"
+            }
+        }*/
+        stage("Docker Build & Push"){
+            steps{
+                withCredentials([usernamePassword(credentialsId:"dockerHub",passwordVariable:"DOCKERHUB_PASSWORD",usernameVariable:"DOCKERHUB_USERNAME")]){
+        sh "docker build -t ${env.DOCKERHUB_USERNAME}/bingo ."
+        sh "docker login -u ${env.DOCKERHUB_USERNAME} -p ${env.DOCKERHUB_PASSWORD}"
+        sh "docker tag bingo ${env.DOCKERHUB_USERNAME}/bingo:latest"
+        sh "docker push ${env.DOCKERHUB_USERNAME}/bingo"
+                }
+            }
+        }
+        //stage("TRIVY"){
+          //  steps{
+            //    sh "trivy image coolrajnish/bingo:latest > trivyimage.txt" 
+            //}
+        //}
+        stage('Deploy to container'){
+            steps{
+                sh 'docker run -d --name bingo -p 3000:3000 coolrajnish/bingo:latest'
+            }
+        }
+
     }
 }
