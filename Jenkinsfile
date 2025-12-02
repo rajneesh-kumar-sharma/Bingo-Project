@@ -1,30 +1,10 @@
 pipeline{
     agent any
-
-    stages {
-        stage('Build') {
-            steps {
-                echo 'Building...'
-                // Add your build commands here
+    stages{
+        stage(Checkout){
+            steps{
+                git branch: 'master', url: 'https://github.com/rajneesh-kumar-sharma/Bingo-Project.git'
             }
-        }
-        stage('Test') {
-            steps {
-                echo 'Testing...'
-                // Add your test commands here
-            }
-        }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying...'
-                // Add your deployment commands here
-            }
-        }
-    }
-
-    post {
-        always {
-            echo 'This will always run after the pipeline completes.'
         }
     }
 }
