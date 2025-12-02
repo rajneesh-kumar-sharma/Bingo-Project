@@ -67,7 +67,7 @@ pipeline{
         }
         stage('Deploy to container'){
             steps{
-                sh 'docker run -d --name bingo -p 4000:4000 coolrajnish/bingo:latest'
+                sh 'docker run -d --name bingo -p 3000:3000 coolrajnish/bingo:latest'
             }
         }
 
