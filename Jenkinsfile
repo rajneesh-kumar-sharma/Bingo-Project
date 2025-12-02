@@ -6,8 +6,10 @@ pipeline{
                 cleanWs()
             }
     }
-    stage('checkout code'){
+        stage('checkout code'){
         steps {
             git branch: 'master', url: 'https://github.com/rajneesh-kumar-sharma/Bingo-Project.git'
+    }
+}
     }
 }
