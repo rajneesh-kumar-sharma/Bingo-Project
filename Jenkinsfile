@@ -1,5 +1,9 @@
 pipeline{
     agent any
+    tools{
+        jdk 'jdk-17'
+        nodejs 'Node18'
+    }
     stages {
         stage('checkout code'){
         steps {
