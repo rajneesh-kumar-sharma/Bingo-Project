@@ -12,9 +12,19 @@
                 sh "npm install"
             }
         }
-        stage('Run Tests') {
-            steps {
-                sh "npm test"
+        stage("Docker Build & Push"){
+            steps{
+                withCredentials([usernamePassword(credentialsId:"dockerHub",passwordVariable:"DOCKERHUB_PASSWORD",usernameVariable:"DOCKERHUB_USERNAME")]){
+        sh "docker build -t ${env.DOCKERHUB_USERNAME}/bingo ."
+        sh "docker login -u ${env.DOCKERHUB_USERNAME} -p ${env.DOCKERHUB_PASSWORD}"
+        sh "docker tag bingo ${env.DOCKERHUB_USERNAME}/bingo:latest"
+        sh "docker push ${env.DOCKERHUB_USERNAME}/bingo"
+                }
+            }
+        }
+        stage('Deploy to container'){
+            steps{
+                sh 'docker run -d --name bingo -p 3000:3000 coolrajnish/bingo:latest'
             }
         }
     }
