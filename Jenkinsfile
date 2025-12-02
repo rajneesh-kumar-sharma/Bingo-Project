@@ -12,9 +12,9 @@
                 sh "npm install"
             }
         }
-        stage('Install Dependencies') {
+        stage('Run Tests') {
             steps {
-                sh "npm install"
+                sh "npm test"
             }
         }
     }
