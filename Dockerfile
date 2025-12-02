@@ -17,7 +17,7 @@ COPY . .
 RUN npm run build
 
 # Expose port 3000 (assuming your Next.js app runs on port 3000)
-EXPOSE 3000
+EXPOSE 4000
 
 # Define the command to run your application in development mode
 CMD ["npm", "run", "dev"]

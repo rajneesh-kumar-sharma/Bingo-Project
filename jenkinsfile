@@ -15,7 +15,7 @@ pipeline{
         }
         stage('Checkout from Git'){
             steps{
-                git branch: 'main', url: 'https://github.com/Aseemakram19/bingo1.git'
+                git branch: 'master', url: 'https://github.com/rajneesh-kumar-sharma/Bingo-Project.git'
             }
         }
         stage("Sonarqube Analysis "){
@@ -54,20 +54,20 @@ pipeline{
                 script{
                    withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){   
                        sh "docker build -t bingo ."
-                       sh "docker tag bingo aseemakram19/bingo:latest "
-                       sh "docker push aseemakram19/bingo:latest "
+                       sh "docker tag bingo coolrajnish/bingo:latest "
+                       sh "docker push coolrajnish/bingo:latest "
                     }
                 }
             }
         }
         stage("TRIVY"){
             steps{
-                sh "trivy image aseemakram19/bingo:latest > trivyimage.txt" 
+                sh "trivy image coolrajnish/bingo:latest > trivyimage.txt" 
             }
         }
         stage('Deploy to container'){
             steps{
-                sh 'docker run -d --name bingo -p 3000:3000 aseemakram19/bingo:latest'
+                sh 'docker run -d --name bingo -p 4000:4000 coolrajnish/bingo:latest'
             }
         }
 
