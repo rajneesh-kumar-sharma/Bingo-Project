@@ -1,12 +1,6 @@
-version: '3'
-
-services:
-  nextjs-app:
-    container_name: nextjs-container
-    build:
-      context: .
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./:/usr/src/app
-
+version : "2.40.3"
+services :
+  web :
+     image: "coolrajnish/bingo:latest"
+     ports : 
+         - "3000:3000"

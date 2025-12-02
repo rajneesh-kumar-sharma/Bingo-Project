@@ -22,9 +22,10 @@
                 }
             }
         }
-        stage('Deploy to container'){
+        stage("Deploy"){
             steps{
-                sh 'docker run -d --name bingo -p 3000:3000 coolrajnish/bingo:latest'
+                sh "docker compose down && docker compose up -d"
+
             }
         }
     }
